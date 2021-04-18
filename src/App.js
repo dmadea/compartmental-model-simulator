@@ -28,8 +28,8 @@ class App extends React.Component {
     this.state = {
       initData: [],
       ratesData: [],
-      // schemeText: "A = B = C = D = E",
-      schemeText: "S + I = 2I\nI = R = S",
+      schemeText: "A = B = C = D = E",
+      // schemeText: "S + I = 2I\nI = R = S",
 
       figure: {
         data: [],
