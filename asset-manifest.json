@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "/compartmental-model-simulator/static/css/main.da08685f.chunk.css",
+    "main.css": "/compartmental-model-simulator/static/css/main.94699371.chunk.css",
     "main.js": "/compartmental-model-simulator/static/js/main.56ad34cd.chunk.js",
     "main.js.map": "/compartmental-model-simulator/static/js/main.56ad34cd.chunk.js.map",
     "runtime-main.js": "/compartmental-model-simulator/static/js/runtime-main.2c0156a0.js",
     "runtime-main.js.map": "/compartmental-model-simulator/static/js/runtime-main.2c0156a0.js.map",
-    "static/css/2.42512602.chunk.css": "/compartmental-model-simulator/static/css/2.42512602.chunk.css",
+    "static/css/2.7cd71abd.chunk.css": "/compartmental-model-simulator/static/css/2.7cd71abd.chunk.css",
     "static/js/2.d4ed1591.chunk.js": "/compartmental-model-simulator/static/js/2.d4ed1591.chunk.js",
     "static/js/2.d4ed1591.chunk.js.map": "/compartmental-model-simulator/static/js/2.d4ed1591.chunk.js.map",
     "static/js/3.31e73ace.chunk.js": "/compartmental-model-simulator/static/js/3.31e73ace.chunk.js",
     "static/js/3.31e73ace.chunk.js.map": "/compartmental-model-simulator/static/js/3.31e73ace.chunk.js.map",
     "index.html": "/compartmental-model-simulator/index.html",
-    "static/css/2.42512602.chunk.css.map": "/compartmental-model-simulator/static/css/2.42512602.chunk.css.map",
-    "static/css/main.da08685f.chunk.css.map": "/compartmental-model-simulator/static/css/main.da08685f.chunk.css.map",
+    "static/css/2.7cd71abd.chunk.css.map": "/compartmental-model-simulator/static/css/2.7cd71abd.chunk.css.map",
+    "static/css/main.94699371.chunk.css.map": "/compartmental-model-simulator/static/css/main.94699371.chunk.css.map",
     "static/js/2.d4ed1591.chunk.js.LICENSE.txt": "/compartmental-model-simulator/static/js/2.d4ed1591.chunk.js.LICENSE.txt",
     "static/media/katex.min.css": "/compartmental-model-simulator/static/media/KaTeX_Typewriter-Regular.ea67dc3c.ttf",
     "static/media/logo.2d27ead7.svg": "/compartmental-model-simulator/static/media/logo.2d27ead7.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.2c0156a0.js",
-    "static/css/2.42512602.chunk.css",
+    "static/css/2.7cd71abd.chunk.css",
     "static/js/2.d4ed1591.chunk.js",
-    "static/css/main.da08685f.chunk.css",
+    "static/css/main.94699371.chunk.css",
     "static/js/main.56ad34cd.chunk.js"
   ]
 }
