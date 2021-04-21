@@ -28,7 +28,7 @@ class App extends React.Component {
     this.state = {
       initData: [],
       ratesData: [],
-      schemeText: "A = B = C = D = E",
+      schemeText: "A^{+} + B^{2+} = B = C = D = E",
       // schemeText: "S + I = 2I\nI = R = S",
 
       figure: {

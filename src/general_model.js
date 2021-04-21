@@ -85,33 +85,33 @@ export class GeneralModel {
             // following code makes numbers subscript and text keeps normal, all text is then 
             // enclosed in \\mathrm{}, also dots . are replaced by \\cdot
 
-            let chars = c.split('');
-            let name = '';
-            let numbers = null;
+            // let chars = c.split('');
+            // let name = '';
+            // let numbers = null;
 
-            let addNumbers = function () {
-                if (numbers == null) return;
+            // let addNumbers = function () {
+            //     if (numbers == null) return;
 
-                name += `_{${numbers}}`;
-                numbers = null;
-            }
+            //     name += `_{${numbers}}`;
+            //     numbers = null;
+            // }
 
-            for (let i = 0; i < chars.length; i++) {
-                if (isNaN(chars[i])) {
-                    addNumbers();
-                    name += chars[i];
-                }
-                else {
-                    numbers = numbers == null ? '' : numbers;
-                    numbers += chars[i];
-                    if (i === chars.length - 1)
-                        addNumbers();
-                }
-            }
+            // for (let i = 0; i < chars.length; i++) {
+            //     if (isNaN(chars[i])) {
+            //         addNumbers();
+            //         name += chars[i];
+            //     }
+            //     else {
+            //         numbers = numbers == null ? '' : numbers;
+            //         numbers += chars[i];
+            //         if (i === chars.length - 1)
+            //             addNumbers();
+            //     }
+            // }
 
-            name = `\\mathrm{${name.replaceAll('.', '\\cdot ')}}`;
+            // name = `\\mathrm{${c.replaceAll('.', '\\cdot ')}}`;
             
-            result.push(name);
+            result.push(`\\mathrm{${c.replaceAll('.', '\\cdot ')}}`);
         }
         return result;
     }
@@ -347,37 +347,84 @@ export class GeneralModel {
 
         let lines = scheme.split('\n');
 
+        // debugger;
+
+
+        // + sign for separation of reactants cannot follow '_' and '^' characters and cannot be enclosed in curly braces
+
         lines.forEach(line => {
-            line = line.split('#')[0]  // remove comments
+            line = line.split('//')[0]  // remove comments
             let white_space_filter = line.match(/[^\s]+/g);
             if (line === "" || white_space_filter === null)
                 return;
 
             line = white_space_filter.join('')  // remove white space characters
-            let processed_tokens = [];
+            let sides = [];
 
-            line.split('=').forEach(token => {
-                let entries = [];
+            line.split('=').forEach(side => {
+                let tokens = [];
+                
+                // find the indicies of + signs
+                var plusIndices = [];
+                for(var i = 0; i < side.length; i++) {
+                    if (side[i] === "+" && side[i - 1] !== '^' && side[i - 1] !== '_') {
+                        plusIndices.push(i);
+                    } 
+                }
 
-                token.split('+').forEach(entry => {
+                var re = /{[^{}]*\+[^{}]*}/g;  // find the + signs enclosed in curly braces
+                var s = `${side}$`; // copy is needed, otherwise next code will cause infinite loop...
+                
+                var m;
+                while(m = re.exec(s)) {
+                    var deleted = true;
+                    let startIdx = m.index;
+                    let endIdx = startIdx + m[0].length - 1;
+                    while(deleted) {
+                        deleted = false;
+                        for (var i = 0; i <= plusIndices.length; i++){
+                            if (plusIndices[i] > startIdx && plusIndices[i] < endIdx) {
+                                plusIndices.splice(i, 1);
+                                deleted = true;
+                                break;                                
+                            }
+                        }
+                    }
+                }
+                console.log(plusIndices);
 
-                    let regExp = /(\d)([\w\d\.]+)|([\w\d\.]+)/g;
-                    let match = regExp.exec(entry);  // get groups
+                // split the side based on found indexes
+                let splitSide = [];
+                var lastIdx = 0;
+                for (var i = 0; i < plusIndices.length; i++){
+                    splitSide.push(side.substring(lastIdx, plusIndices[i]));
+                    lastIdx = plusIndices[i] + 1;
+                }
+                splitSide.push(side.substring(lastIdx, side.length));
 
-                    let contains_number = typeof match[3] == 'undefined';
+                splitSide.forEach(token => {
 
-                    let number = contains_number ? parseInt(match[1]) : 1;
-                    let name = contains_number ? match[2] : match[3];
+                    // let regExp = /(\d)([\w\d\.]+)|([\w\d\.]+)/g;
+                    let regExp = /^(\d+).+/g;  // match multiple digits at followed by any number of characters, digits has to be at the begining of the string
 
-                    if (number < 1) number = 1;
+                    let match = regExp.exec(token);  // get groups
+
+                    // let notContainsNum = typeof match[1] == 'undefined';
+                    let containsNum = match != null;
+
+                    let number = containsNum ? parseInt(match[1]) : 1;
+                    let name = containsNum ? token.substring(match[1].length) : token;
+
+                    // if (number < 1) number = 1;
                     
-                    for (let i = 0; i < number; i++) entries.push(name);
+                    for (let i = 0; i < number; i++) 
+                        tokens.push(name);
                 });
-                processed_tokens.push(entries);
+                sides.push(tokens);
             });
 
-            for (let i = 0; i < processed_tokens.length - 1; i++) {
-                _model.addElementaryReaction(processed_tokens[i], processed_tokens[i+1]);
+            for (let i = 0; i < sides.length - 1; i++) {
+                _model.addElementaryReaction(sides[i], sides[i+1]);
             }
 
         });
@@ -389,3 +436,8 @@ export class GeneralModel {
         return _model;
     }
 }
+
+
+
+
+

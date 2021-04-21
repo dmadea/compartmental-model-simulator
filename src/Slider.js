@@ -122,16 +122,16 @@ export default function InputSlider({ steps, min, max, color, log, type, index, 
 
   value = typeof value === 'number' ? value : 0;
   if (log)
-    min = (min < 1e-4) ? 1e-4 : min;
+    min = (min <= 0) ? max * 1e-6 : min;  // make min value 6 orders of magnitude lower from maximum value 
 
-  // let step = log ? (Math.log(max) - Math.log(min)) / steps : (max - min) / steps;
   let linStep = (max - min) / steps;
   let logStep = (Math.log(max) - Math.log(min)) / steps;
 
   // calculates the linear step for input field
   let inputStep = log ? Math.exp(Math.log(value) + logStep) - value : linStep;
   inputStep = roundToSignificantFigures(inputStep, 3)
-  console.log(inputStep);
+  
+  // console.log(inputStep);
 
   //   function valueLabelFormat(value) {
   //     const [coefficient, exponent] = value

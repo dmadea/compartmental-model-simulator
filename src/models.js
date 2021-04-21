@@ -499,28 +499,28 @@ export const kineticModels = [
         class: "Photochemistry",
         name: "Rose bengal kinetics",
         description: "TODO",
-        scheme: "tRB = RB\ntRB + RB = 2RB\n2tRB = tRB + RB\ntRB + RB = raRB + rkRB\n2tRB = raRB + rkRB\nraRB + rkRB = 2RB",
+        scheme: "^3RB^{2-} = RB^{2-}\n^3RB^{2-} + RB^{2-} = 2RB^{2-}\n2^3RB^{2-} = ^3RB^{2-} + RB^{2-}\n^3RB^{2-} + RB^{2-} = RB^{.-} + RB^{.3-}\n2^3RB^{2-} = RB^{.-} + RB^{.3-}\nRB^{.-} + RB^{.3-} = 2RB^{2-}",
         nonZeroBackwardRates: false,
         initialConditions: {
-            tRB: {
+            "^3RB^{2-}": {
                 logSlider: false,
                 min: 0,
                 max: 50,
                 value: 1
             },
-            RB: {
+            "RB^{2-}": {
                 logSlider: false,
                 min: 0,
                 max: 50,
                 value: 0
             },
-            raRB: {
+            "RB^{.-}": {
                 logSlider: false,
                 min: 0,
                 max: 50,
                 value: 0
             },
-            rkRB: {
+            "RB^{.3-}": {
                 logSlider: false,
                 min: 0,
                 max: 50,
