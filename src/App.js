@@ -12,6 +12,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { kineticModels } from './models.js';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+
 
 // import React from 'react';
 // import Icon from '@material-ui/core/Icon';
@@ -19,6 +21,7 @@ import PlotlyGraph from './graph.js'
 
 import { BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
+import { TextareaAutosize } from '@material-ui/core';
 
 
 class App extends React.Component {
@@ -28,7 +31,7 @@ class App extends React.Component {
     this.state = {
       initData: [],
       ratesData: [],
-      schemeText: "A^{+} + B^{2+} = B = C = D = E",
+      schemeText: "A = B = C = D = E",
       // schemeText: "S + I = 2I\nI = R = S",
 
       figure: {
@@ -39,6 +42,7 @@ class App extends React.Component {
             showgrid: true,
             zeroline: false,
             linecolor: 'black',
+            type: 'linear',
             linewidth: 2,
             mirror: true
           },
@@ -46,7 +50,7 @@ class App extends React.Component {
               title: 'Concentration',
               showgrid: true,
               zeroline: false,
-              // type: 'log',
+              type: 'linear',
               linecolor: 'black',
               linewidth: 2,
               mirror: true
@@ -60,6 +64,7 @@ class App extends React.Component {
       },
 
       texEquation: '',
+      texModel: '',
       cbNonZero: false
     };
 
@@ -70,6 +75,7 @@ class App extends React.Component {
     this.textChangedCallback = this.textChangedCallback.bind(this);
     this.sliderLogToggledCallback = this.sliderLogToggledCallback.bind(this);
     this.modelChanged = this.modelChanged.bind(this);
+    // this.tbLogXChanged = this.tbLogXChanged.bind(this);
     // this.transferParsToModel = this.transferParsToModel.bind(this);
 
     // this.options = top100Films.map((option) => {
@@ -145,7 +151,7 @@ class App extends React.Component {
     this.model = GeneralModel.fromText(scheme);
     let comps = this.model.getCompartments();
     let compsF = this.model.getLatexFormattedCompartments();
-    let rateNames = this.model.getRateNames();
+    let rateNames = this.model.getRateNames(false, true);
 
     let initData = new Array(comps.length);
 
@@ -207,7 +213,8 @@ class App extends React.Component {
       initData: initData,
       ratesData: ratesData,
       figure: figure,
-      texEquation: this.state.cbNonZero ? this.model.diffEquations : this.model.diffEquationsFRates
+      texEquation: this.state.cbNonZero ? this.model.diffEquations : this.model.diffEquationsFRates,
+      texModel: this.state.cbNonZero ? this.model.latexModel : this.model.latexModelFRates 
     });
   }
 
@@ -284,10 +291,19 @@ class App extends React.Component {
 
     this.setState({
       texEquation: event.target.checked ? this.model.diffEquations : this.model.diffEquationsFRates,
+      texModel: event.target.checked ? this.model.latexModel : this.model.latexModelFRates,
       cbNonZero: event.target.checked,
       figure: figure
     });
   }
+
+  // tbLogXChanged() {
+  //   let figure = this.state.figure;
+  //   figure.layout.xaxis.type = (figure.layout.xaxis.type === 'linear') ? 'log' : 'linear';
+  //   figure.revision += 1;
+  //   this.setState({figure: figure});
+  //   console.log(this.state.figure);
+  // }
 
   render() {
     return (
@@ -313,7 +329,12 @@ class App extends React.Component {
                 label="Non-zero backwards rates"
             />
 
-            <BlockMath math={`\\begin{aligned} ${this.state.texEquation} \\end{aligned}`} errorColor={'#cc0000'}/>
+            <BlockMath math={`${this.state.texModel} `} errorColor={'#cc0000'}/>  {/* without space it will through an error: KaTeX can only parse string typed expression */}
+            {/* <BlockMath math={`\\begin{aligned} ${this.state.texModel} \\end{aligned}`} errorColor={'#cc0000'}/> */}
+            <BlockMath math={`${this.state.texEquation} `} errorColor={'#cc0000'}/>  {/* without space it will through an error: KaTeX can only parse string typed expression */}
+
+
+            {/* <BlockMath math={`\\begin{aligned} ${this.state.texEquation} \\end{aligned}`} errorColor={'#cc0000'}/> */}
   
             <InitCondTable 
               data={this.state.initData} 
@@ -327,6 +348,26 @@ class App extends React.Component {
               sliderLogToggledCallback={this.sliderLogToggledCallback}
               disabled={!this.state.cbNonZero}>
             </RatesTable>
+
+            <ToggleButton
+                selected={(this.state.figure.layout.xaxis.type === 'linear') ? false : true}
+                onChange={() => {
+                  let figure = this.state.figure;
+                  figure.layout.xaxis.type = (figure.layout.xaxis.type === 'linear') ? 'log' : 'linear';
+                  figure.revision += 1;
+                  this.setState({figure: figure});
+                }}
+              >Log x</ToggleButton>
+
+            <ToggleButton
+                selected={(this.state.figure.layout.yaxis.type === 'linear') ? false : true}
+                onChange={() => {
+                  let figure = this.state.figure;
+                  figure.layout.yaxis.type = (figure.layout.yaxis.type === 'linear') ? 'log' : 'linear';
+                  figure.revision += 1;
+                  this.setState({figure: figure});
+                }}
+              >Log y</ToggleButton>
   
           </Grid>
           <Grid item xs>
@@ -337,6 +378,7 @@ class App extends React.Component {
               layout={this.state.figure.layout}
               revision={this.state.figure.revision}
              />
+             
           </Grid>
         </Grid>
       </div>

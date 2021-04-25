@@ -1,5 +1,6 @@
 
 import { rungeKutta4 } from './rk.js';
+var rk45 = require( "./rk45.js" );
 
 // Warn if overriding existing method
 if(Array.prototype.equals)
@@ -41,14 +42,17 @@ export class GeneralModel {
         this.func = null;  // function that returns dc_dt for current c and t for built model
         this.diffEquations = '';  //variable that stores diff. equation text to be displayed
         this.diffEquationsFRates = '';  //only forward rates diff eqs.
+        this.latexModel = '';  // model rewritten in latex forward and backward rates
+        this.latexModelFRates = '';  // model rewritten in latex only forward rates
     }
 
-    addElementaryReaction(from_comp=['A', 'A'], to_comp=['B', 'C'], forward_rate=1, backward_rate=0) {
+    addElementaryReaction(from_comp=['A', 'A'], to_comp=['B', 'C'], forward_rate=1, backward_rate=0, comment='') {
         let reaction = {
             from_comp: from_comp,
             to_comp: to_comp,
             forward_rate: forward_rate,
-            backward_rate: backward_rate
+            backward_rate: backward_rate,
+            comment: comment
         };
 
         for (let i = 0; i < this.elem_reactions.length; i++) {
@@ -111,22 +115,80 @@ export class GeneralModel {
 
             // name = `\\mathrm{${c.replaceAll('.', '\\cdot ')}}`;
             
-            result.push(`\\mathrm{${c.replaceAll('.', '\\cdot ')}}`);
+            result.push(`\\mathrm{${c.replaceAll('.', '{\\Large\\cdot}')}}`);
         }
         return result;
     }
 
-    getRateNames(backwardRates=false) {
+    // getRateNames(backwardRates=false) {
 
+    //     let comps = this.getCompartments();
+    //     let fComps = this.getLatexFormattedCompartments();
+    //     let dict = {};
+
+    //     for (let i = 0; i < comps.length + 1; i++) 
+    //         dict[comps[i]] = fComps[i];
+
+    //     let rateNames = [];
+    //     for (let el of this.elem_reactions) {
+    //         let fFromComps = el.from_comp.map(c => dict[c]);
+    //         let fToComps = el.to_comp.map(c => dict[c]);
+
+    //         let occursFC = GeneralModel.occurences(fFromComps);
+    //         let occursTC = GeneralModel.occurences(fToComps);
+
+    //         fFromComps = [];
+    //         fToComps = [];
+
+    //         // if there is multiple compartments, find occurences and multiply them
+    //         for (let key in occursFC) {
+    //             let num = occursFC[key];
+    //             fFromComps.push(num === 1 ? key : `${num}${key}`);
+    //         }
+
+    //         for (let key in occursTC) {
+    //             let num = occursTC[key];
+    //             fToComps.push(num === 1 ? key : `${num}${key}`);
+    //         }
+
+    //         let fArrow = backwardRates ? '\\rightarrow' : '\\rightleftharpoons';
+    //         let frNoColor = `k_{${fFromComps.join('+')} ${fArrow} ${fToComps.join('+')}}`;
+
+    //         let fr = `{\\color{blue}${frNoColor}}`;
+    //         let br = `{\\color{red}k_{${fFromComps.join('+')} \\leftarrow ${fToComps.join('+')}}}`;
+
+    //         rateNames.push(backwardRates ? [fr, br] : frNoColor);
+    //     }
+
+    //     return rateNames;
+    // }
+
+    getRateNames(backwardRates=false, noColor=false) {
+
+        let rateNames = [];
+        for (let i = 0; i < this.elem_reactions.length; i++) {
+            // let frNoColor = `k_{${i+1}}`;
+            let fr = noColor ? `k_{${i+1}}` : `{\\color{blue}k_{${i+1}}}`;
+            let br = noColor ? `k_{-${i+1}}`: `{\\color{red}k_{-${i+1}}}`;
+
+            rateNames.push(backwardRates ? [fr, br] : fr);
+        }
+
+        return rateNames;
+    }
+
+    _buildLatexModel(backwardRates=false) {
         let comps = this.getCompartments();
         let fComps = this.getLatexFormattedCompartments();
         let dict = {};
+        let rateNames = this.getRateNames(backwardRates);
 
         for (let i = 0; i < comps.length + 1; i++) 
             dict[comps[i]] = fComps[i];
 
-        let rateNames = [];
-        for (let el of this.elem_reactions) {
+        let eqs = [];
+        for (let i = 0; i < this.elem_reactions.length; i++) {
+            let el = this.elem_reactions[i];
             let fFromComps = el.from_comp.map(c => dict[c]);
             let fToComps = el.to_comp.map(c => dict[c]);
 
@@ -139,25 +201,29 @@ export class GeneralModel {
             // if there is multiple compartments, find occurences and multiply them
             for (let key in occursFC) {
                 let num = occursFC[key];
-                fFromComps.push(num === 1 ? key : `${num}${key}`);
+                fFromComps.push(num === 1 ? key : `${num}\\ ${key}`);
             }
 
             for (let key in occursTC) {
                 let num = occursTC[key];
-                fToComps.push(num === 1 ? key : `${num}${key}`);
+                fToComps.push(num === 1 ? key : `${num}\\ ${key}`);
             }
 
-            let fArrow = backwardRates ? '\\rightarrow' : '\\rightleftharpoons';
-            let frNoColor = `k_{${fFromComps.join('+')} ${fArrow} ${fToComps.join('+')}}`;
+            let fArrowFW = `&\\xrightleftharpoons[${rateNames[i][1]}]{\\hspace{0.1cm}${rateNames[i][0]}\\hspace{0.1cm}}`;
+            let fArrowF = `&\\xrightarrow{\\hspace{0.1cm}${rateNames[i]}\\hspace{0.1cm}}`;
+            // help from https://tex.stackexchange.com/questions/47687/adding-line-by-line-comments-to-math-proofs
+            let comment = (el.comment === '') ? '' : `&& {\\color{green}\\text{\\textit{${el.comment}}}}`;
+            let eq = `${fFromComps.join('+')}  ${backwardRates ? fArrowFW : fArrowF} ${fToComps.join('+')} ${comment}`;
 
-            let fr = `{\\color{blue}${frNoColor}}`;
-            let br = `{\\color{red}k_{${fFromComps.join('+')} \\leftarrow ${fToComps.join('+')}}}`;
-
-            rateNames.push(backwardRates ? [fr, br] : frNoColor);
+            eqs.push(eq);
         }
 
-        return rateNames;
+        let finalModel = `\\begin{aligned} ${eqs.join('\\\\')} \\end{aligned}`;
+        // console.log(finalModel);
+        return finalModel;
+        // return eqs.join('\\\\');
     }
+
 
     printModel() {
         console.log(`Scheme: ${this.scheme}`);
@@ -179,9 +245,20 @@ export class GeneralModel {
             backward_rates[i] = useZeroBR ? 0 : this.elem_reactions[i].backward_rate;
         }
 
-        let solution = rungeKutta4((t, c) => this.func(t, c, forward_rates, backward_rates), j, range, steps);
+        // let solution = rungeKutta4((t, c) => this.func(t, c, forward_rates, backward_rates), j, range, steps);
 
-        return solution;
+        var solver = new rk45.System();
+
+        solver.setStart( range[0] );        // Initial start time, t=0.
+        solver.setStop( range[1] );         // Time at which we want a solution, t=2.
+        solver.setInitX( j );  // y(0) -- value of y when t=0.
+        solver.setH(0.1);
+        solver.setFn( (t, c) => this.func(t, c, forward_rates, backward_rates) );    // Differential equation we're solving.
+        
+        solver.solve();
+        // console.log(`Number of steps: ${solver.result.xVals.length}`);
+
+        return solver.result;
     }
 
     static occurences(array, dict=null, subtractOccurences=false) {
@@ -201,6 +278,7 @@ export class GeneralModel {
         }
         return dict;
     }
+
 
     _buildDiffEq(idx_from, idx_to, includeBackwardRates=true){
         // builds latex type diff. equation for printing
@@ -255,8 +333,8 @@ export class GeneralModel {
 
         // finish latex diff. equations
 
-        var result = '';
-
+        // var result = '';
+        let eqs = [];
         for (let i = 0; i < comps_len; i++) {
             let posOccurs = GeneralModel.occurences(posTerms[i]);
             let allOccurs = GeneralModel.occurences(negTerms[i], posOccurs, true); // subtract same occurences
@@ -272,10 +350,10 @@ export class GeneralModel {
                 terms.push(`${sign}${numStr}${key}`);
             }
 
-            result += `\\frac{\\mathrm d[${compsF[i]}]}{\\mathrm dt}&=${terms.join('')}\\\\`
+            eqs.push(`\\frac{\\mathrm d[${compsF[i]}]}{\\mathrm dt}&=${terms.join('')}`);
         }
 
-        return result;
+        return `\\begin{aligned} ${eqs.join('\\\\')} \\end{aligned}`;;
     }
 
     buildFunc() {
@@ -307,6 +385,9 @@ export class GeneralModel {
 
         this.diffEquations = this._buildDiffEq(idx_from, idx_to, true);
         this.diffEquationsFRates = this._buildDiffEq(idx_from, idx_to, false);
+        this.latexModel = this._buildLatexModel(true);
+        this.latexModelFRates = this._buildLatexModel(false);
+
 
         this.func = (t, c, forward_rates=null, backward_rates=null) => {
             if (forward_rates == null)
@@ -353,7 +434,11 @@ export class GeneralModel {
         // + sign for separation of reactants cannot follow '_' and '^' characters and cannot be enclosed in curly braces
 
         lines.forEach(line => {
-            line = line.split('//')[0]  // remove comments
+            let split = line.split('//')  // remove comments
+            line = split[0];
+            let comment = split.length == 2 ? split[1] : '';
+            comment = comment.trim();
+            // console.log(comment);
             let white_space_filter = line.match(/[^\s]+/g);
             if (line === "" || white_space_filter === null)
                 return;
@@ -373,7 +458,7 @@ export class GeneralModel {
                 }
 
                 var re = /{[^{}]*\+[^{}]*}/g;  // find the + signs enclosed in curly braces
-                var s = `${side}$`; // copy is needed, otherwise next code will cause infinite loop...
+                var s = `${side}`; // copy is needed, otherwise next code will cause infinite loop... IDK why
                 
                 var m;
                 while(m = re.exec(s)) {
@@ -391,7 +476,7 @@ export class GeneralModel {
                         }
                     }
                 }
-                console.log(plusIndices);
+                // console.log(plusIndices);
 
                 // split the side based on found indexes
                 let splitSide = [];
@@ -424,7 +509,7 @@ export class GeneralModel {
             });
 
             for (let i = 0; i < sides.length - 1; i++) {
-                _model.addElementaryReaction(sides[i], sides[i+1]);
+                _model.addElementaryReaction(sides[i], sides[i+1], 1, 0, comment);
             }
 
         });

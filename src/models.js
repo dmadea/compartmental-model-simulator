@@ -424,28 +424,28 @@ export const kineticModels = [
         class: "Photochemistry",
         name: "Photosensitization",
         description: "TODO",
-        scheme: "tPS = PS\n2tPS = tPS + PS\ntPS + S = T + PS\nT = S",
+        scheme: "^3PS = PS // Triplet state decay of sensitizer\n2^3PS = ^3PS + PS // Triplet-triplet annihilation\nS + ^3PS = ^3S + PS // Energy transfer to substrate\n^3S = S // Triplet state decay of substrate\n2^3S = ^3S + S // Triplet-triplet annihilation",
         nonZeroBackwardRates: false,
         initialConditions: {
-            tPS: {
+            '^3PS': {
                 logSlider: false,
                 min: 0,
                 max: 50,
                 value: 1
             },
-            PS: {
+            'PS': {
                 logSlider: false,
                 min: 0,
                 max: 50,
                 value: 0
             },
-            S: {
+            'S': {
                 logSlider: false,
                 min: 0,
                 max: 50,
                 value: 2
             },
-            T: {
+            '^3S': {
                 logSlider: false,
                 min: 0,
                 max: 50,
@@ -493,20 +493,36 @@ export const kineticModels = [
                 forwardRateLogSlider: false,
                 backwardRateLogSlider: false
             },
+            {
+                forwardRate: 0.1,
+                backwardRate: 0,
+                forwardRateMin: 0,
+                forwardRateMax: 10,
+                backwardRateMin: 0,
+                backwardRateMax: 10,
+                forwardRateLogSlider: false,
+                backwardRateLogSlider: false
+            },
         ],
     },
     {
         class: "Photochemistry",
         name: "Rose bengal kinetics",
         description: "TODO",
-        scheme: "^3RB^{2-} = RB^{2-}\n^3RB^{2-} + RB^{2-} = 2RB^{2-}\n2^3RB^{2-} = ^3RB^{2-} + RB^{2-}\n^3RB^{2-} + RB^{2-} = RB^{.-} + RB^{.3-}\n2^3RB^{2-} = RB^{.-} + RB^{.3-}\nRB^{.-} + RB^{.3-} = 2RB^{2-}",
+        scheme: "^1RB^{2-*} = ^3RB^{2-*} // Intersystem crossing\n^1RB^{2-*} = RB^{2-} // Singlet state decay (internal conversion and fluorescence)\n^3RB^{2-*} = RB^{2-} // Triplet state decay (internal conversion and phosphorescence)\n^3RB^{2-*} + RB^{2-} = 2RB^{2-} // Self-quenching\n2^3RB^{2-*} = ^1RB^{2-*} + RB^{2-} // Triplet-triplet annihilation\n^3RB^{2-*} + RB^{2-} = RB^{.-} + RB^{.3-} // Electron transfer\n2^3RB^{2-*} = RB^{.-} + RB^{.3-} // Disproportionation\nRB^{.-} + RB^{.3-} = 2RB^{2-} // Back electron transfer",
         nonZeroBackwardRates: false,
         initialConditions: {
-            "^3RB^{2-}": {
+            "^1RB^{2-*}": {
                 logSlider: false,
                 min: 0,
                 max: 50,
                 value: 1
+            },
+            "^3RB^{2-*}": {
+                logSlider: false,
+                min: 0,
+                max: 50,
+                value: 0
             },
             "RB^{2-}": {
                 logSlider: false,
@@ -528,6 +544,26 @@ export const kineticModels = [
             }
         },
         rates: [
+            {
+                forwardRate: 10,
+                backwardRate: 0,
+                forwardRateMin: 0,
+                forwardRateMax: 10,
+                backwardRateMin: 0,
+                backwardRateMax: 10,
+                forwardRateLogSlider: false,
+                backwardRateLogSlider: false
+            },
+            {
+                forwardRate: 2,
+                backwardRate: 0,
+                forwardRateMin: 0,
+                forwardRateMax: 10,
+                backwardRateMin: 0,
+                backwardRateMax: 10,
+                forwardRateLogSlider: false,
+                backwardRateLogSlider: false
+            },
             {
                 forwardRate: 1.01,
                 backwardRate: 0,
@@ -591,16 +627,3 @@ export const kineticModels = [
         ],
     },
 ]
-
-
-
-
-
-// options = top100Films.map((option) => {
-//     const firstLetter = option.title[0].toUpperCase();
-//     return {
-//       firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
-//       ...option,
-//     };
-//   });
-
