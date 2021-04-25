@@ -1,27 +1,27 @@
 {
   "files": {
     "main.css": "/compartmental-model-simulator/static/css/main.94699371.chunk.css",
-    "main.js": "/compartmental-model-simulator/static/js/main.3b4f0bb8.chunk.js",
-    "main.js.map": "/compartmental-model-simulator/static/js/main.3b4f0bb8.chunk.js.map",
-    "runtime-main.js": "/compartmental-model-simulator/static/js/runtime-main.1941af64.js",
-    "runtime-main.js.map": "/compartmental-model-simulator/static/js/runtime-main.1941af64.js.map",
+    "main.js": "/compartmental-model-simulator/static/js/main.d39c457b.chunk.js",
+    "main.js.map": "/compartmental-model-simulator/static/js/main.d39c457b.chunk.js.map",
+    "runtime-main.js": "/compartmental-model-simulator/static/js/runtime-main.d7b550bd.js",
+    "runtime-main.js.map": "/compartmental-model-simulator/static/js/runtime-main.d7b550bd.js.map",
     "static/css/2.7cd71abd.chunk.css": "/compartmental-model-simulator/static/css/2.7cd71abd.chunk.css",
-    "static/js/2.a3473989.chunk.js": "/compartmental-model-simulator/static/js/2.a3473989.chunk.js",
-    "static/js/2.a3473989.chunk.js.map": "/compartmental-model-simulator/static/js/2.a3473989.chunk.js.map",
-    "static/js/3.aa69e60c.chunk.js": "/compartmental-model-simulator/static/js/3.aa69e60c.chunk.js",
-    "static/js/3.aa69e60c.chunk.js.map": "/compartmental-model-simulator/static/js/3.aa69e60c.chunk.js.map",
+    "static/js/2.64c8c942.chunk.js": "/compartmental-model-simulator/static/js/2.64c8c942.chunk.js",
+    "static/js/2.64c8c942.chunk.js.map": "/compartmental-model-simulator/static/js/2.64c8c942.chunk.js.map",
+    "static/js/3.e2ffc0cc.chunk.js": "/compartmental-model-simulator/static/js/3.e2ffc0cc.chunk.js",
+    "static/js/3.e2ffc0cc.chunk.js.map": "/compartmental-model-simulator/static/js/3.e2ffc0cc.chunk.js.map",
     "index.html": "/compartmental-model-simulator/index.html",
     "static/css/2.7cd71abd.chunk.css.map": "/compartmental-model-simulator/static/css/2.7cd71abd.chunk.css.map",
     "static/css/main.94699371.chunk.css.map": "/compartmental-model-simulator/static/css/main.94699371.chunk.css.map",
-    "static/js/2.a3473989.chunk.js.LICENSE.txt": "/compartmental-model-simulator/static/js/2.a3473989.chunk.js.LICENSE.txt",
+    "static/js/2.64c8c942.chunk.js.LICENSE.txt": "/compartmental-model-simulator/static/js/2.64c8c942.chunk.js.LICENSE.txt",
     "static/media/katex.min.css": "/compartmental-model-simulator/static/media/KaTeX_Typewriter-Regular.ea67dc3c.ttf",
     "static/media/logo.2d27ead7.svg": "/compartmental-model-simulator/static/media/logo.2d27ead7.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.1941af64.js",
+    "static/js/runtime-main.d7b550bd.js",
     "static/css/2.7cd71abd.chunk.css",
-    "static/js/2.a3473989.chunk.js",
+    "static/js/2.64c8c942.chunk.js",
     "static/css/main.94699371.chunk.css",
-    "static/js/main.3b4f0bb8.chunk.js"
+    "static/js/main.d39c457b.chunk.js"
   ]
 }
