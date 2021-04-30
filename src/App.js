@@ -13,6 +13,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { kineticModels } from './models.js';
 import ToggleButton from '@material-ui/lab/ToggleButton';
+import Header from './header.js';
 
 
 // import React from 'react';
@@ -86,7 +87,7 @@ class App extends React.Component {
     //   };
     // });
 
-    // console.log(this.options)
+    // console.log(this.options) 
 
   }
 
@@ -309,7 +310,9 @@ class App extends React.Component {
     return (
       <div className="App">
         {/* <img src={logo} className="App-logo" alt="logo" /> */}
-        <p>Compartmental model simulator</p>
+        {/* <p>Compartmental model simulator</p> */}
+
+        <Header/>
   
         <Grid container spacing={1} alignItems="column" direction="row">
           <Grid item xs>
