@@ -309,13 +309,11 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
-        {/* <p>Compartmental model simulator</p> */}
-
         <Header/>
   
         <Grid container spacing={1} alignItems="column" direction="row">
-          <Grid item xs>
+          <Grid item xs={false} sm={1}/>
+          <Grid item xs={6} sm={5}>
 
             <Autocomplete
               options={kineticModels.sort((a, b) => -b.class.localeCompare(a.class))}
@@ -373,7 +371,7 @@ class App extends React.Component {
               >Log y</ToggleButton>
   
           </Grid>
-          <Grid item xs>
+          <Grid item xs={6} sm={5}>
             <PlotlyGraph 
               data={this.state.figure.data}
               frames={this.state.figure.frames}
@@ -383,6 +381,7 @@ class App extends React.Component {
              />
              
           </Grid>
+          <Grid item xs={false} sm={1}/>
         </Grid>
       </div>
     );
