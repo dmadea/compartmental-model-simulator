@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import logo from './img/logo.svg';
 import React from 'react';
 import './App.css';
 // import InputSlider from './Slider.js'
@@ -14,6 +14,7 @@ import TextField from '@material-ui/core/TextField';
 import { kineticModels } from './models.js';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import Header from './header.js';
+import { Switch, Route } from "react-router-dom";
 
 
 // import React from 'react';
@@ -22,7 +23,7 @@ import PlotlyGraph from './graph.js'
 
 import { BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
-import { TextareaAutosize } from '@material-ui/core';
+import { Button, TextareaAutosize } from '@material-ui/core';
 
 
 class App extends React.Component {
@@ -48,19 +49,19 @@ class App extends React.Component {
             mirror: true
           },
           yaxis: {
-              title: 'Concentration',
-              showgrid: true,
-              zeroline: false,
-              type: 'linear',
-              linecolor: 'black',
-              linewidth: 2,
-              mirror: true
+            title: 'Concentration',
+            showgrid: true,
+            zeroline: false,
+            type: 'linear',
+            linecolor: 'black',
+            linewidth: 2,
+            mirror: true
           },
           autosize: true
-          
+
         },
-        frames: [], 
-        config: {scrollZoom: true, responsive: false},
+        frames: [],
+        config: { scrollZoom: true, responsive: false },
         revision: 0  // when this value is changed, it forces the plot to redraw
       },
 
@@ -95,7 +96,7 @@ class App extends React.Component {
     this.modelSubmitted();  // load default model after all components have loaded
   }
 
-  simulModel(useZeroBR=false) {
+  simulModel(useZeroBR = false) {
     let range = [0, 10];
     let steps = 200;
 
@@ -109,17 +110,17 @@ class App extends React.Component {
     // update figure data
     let diff = comps.length - figure.data.length;  // difference in number of current compartments and from new model
     if (diff > 0) {
-        for (let i = 0; i < diff; i++)
-          figure.data.push({
-              x: [],
-              y: [],
-              mode: 'lines',
-              type: 'scatter',
-              name: ''
-            });
-    } else if (diff < 0){
-        for (let i = 0; i < -diff; i++)
-            figure.data.pop();
+      for (let i = 0; i < diff; i++)
+        figure.data.push({
+          x: [],
+          y: [],
+          mode: 'lines',
+          type: 'scatter',
+          name: ''
+        });
+    } else if (diff < 0) {
+      for (let i = 0; i < -diff; i++)
+        figure.data.pop();
     }
 
     for (let i = 0; i < comps.length; i++) {
@@ -141,7 +142,7 @@ class App extends React.Component {
   modelSubmitted(selecteModel) {
     let scheme = this.state.schemeText
 
-    if (scheme === "" || scheme.match(/[^\s]+/g) === null){
+    if (scheme === "" || scheme.match(/[^\s]+/g) === null) {
       alert('Scheme is empty!');
       return;
     }
@@ -164,16 +165,16 @@ class App extends React.Component {
       let condition = typeof selecteModel === 'undefined';
 
       initData[i] = {
-        texName: compsF[i], 
+        texName: compsF[i],
         init: condition ? init_value : selecteModel.initialConditions[comps[i]].value,
-        log: condition? log : selecteModel.initialConditions[comps[i]].logSlider,
-        min: condition? 0 : selecteModel.initialConditions[comps[i]].min,
-        max: condition? 50 : selecteModel.initialConditions[comps[i]].max
+        log: condition ? log : selecteModel.initialConditions[comps[i]].logSlider,
+        min: condition ? 0 : selecteModel.initialConditions[comps[i]].min,
+        max: condition ? 50 : selecteModel.initialConditions[comps[i]].max
       }
       // transfer params to model
       this.model.initial_conditions[comps[i]] = initData[i].init;
     }
-    
+
     // comps.map((c, i) => ({
     //   texName: compsF[i], 
     //   init: (i < lastInitData.length) ? lastInitData[i].init : this.model.initial_conditions[c]
@@ -191,10 +192,10 @@ class App extends React.Component {
       let condition = typeof selecteModel === 'undefined' || typeof selecteModel.rates === 'undefined';
 
       ratesData[i] = {
-        texName:  rateNames[i],
+        texName: rateNames[i],
         fr: condition ? fr_val : selecteModel.rates[i].forwardRate,
         br: condition ? br_val : selecteModel.rates[i].backwardRate,
-        log_fr: condition ? log_fr : selecteModel.rates[i].forwardRateLogSlider, 
+        log_fr: condition ? log_fr : selecteModel.rates[i].forwardRateLogSlider,
         log_br: condition ? log_br : selecteModel.rates[i].backwardRateLogSlider,
         min_fr: condition ? 0 : selecteModel.rates[i].forwardRateMin,
         max_fr: condition ? 10 : selecteModel.rates[i].forwardRateMax,
@@ -215,7 +216,7 @@ class App extends React.Component {
       ratesData: ratesData,
       figure: figure,
       texEquation: this.state.cbNonZero ? this.model.diffEquations : this.model.diffEquationsFRates,
-      texModel: this.state.cbNonZero ? this.model.latexModel : this.model.latexModelFRates 
+      texModel: this.state.cbNonZero ? this.model.latexModel : this.model.latexModelFRates
     });
   }
 
@@ -226,14 +227,14 @@ class App extends React.Component {
 
     switch (type) {
       case "init":  // changing of initial conditions
-          initData[index].log = !initData[index].log;
-          break;
+        initData[index].log = !initData[index].log;
+        break;
       case "fr":   // changing of forward rate constants
-          ratesData[index].log_fr = !ratesData[index].log_fr;
-          break;
+        ratesData[index].log_fr = !ratesData[index].log_fr;
+        break;
       case "br":   // changing of backward rate constants
-          ratesData[index].log_br = !ratesData[index].log_br;
-          break;
+        ratesData[index].log_br = !ratesData[index].log_br;
+        break;
     }
     this.setState({
       initData: initData,
@@ -253,19 +254,19 @@ class App extends React.Component {
     let ratesData = this.state.ratesData;
 
     switch (type) {
-        case "init":  // changing of initial conditions
-            let comps = this.model.getCompartments();
-            this.model.initial_conditions[comps[index]] = f_val;
-            initData[index].init = f_val;
-            break;
-        case "fr":   // changing of forward rate constants
-            this.model.elem_reactions[index].forward_rate = f_val;
-            ratesData[index].fr = f_val;
-            break;
-        case "br":   // changing of backward rate constants
-            this.model.elem_reactions[index].backward_rate = f_val;
-            ratesData[index].br = f_val;
-            break;
+      case "init":  // changing of initial conditions
+        let comps = this.model.getCompartments();
+        this.model.initial_conditions[comps[index]] = f_val;
+        initData[index].init = f_val;
+        break;
+      case "fr":   // changing of forward rate constants
+        this.model.elem_reactions[index].forward_rate = f_val;
+        ratesData[index].fr = f_val;
+        break;
+      case "br":   // changing of backward rate constants
+        this.model.elem_reactions[index].backward_rate = f_val;
+        ratesData[index].br = f_val;
+        break;
     }
 
     let figure = this.simulModel(!this.state.cbNonZero);
@@ -309,80 +310,91 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Header/>
-  
-        <Grid container spacing={1} alignItems="column" direction="row">
-          <Grid item xs={false} sm={1}/>
-          <Grid item xs={6} sm={5}>
+        <Header />
 
-            <Autocomplete
-              options={kineticModels.sort((a, b) => -b.class.localeCompare(a.class))}
-              groupBy={(option) => option.class}
-              getOptionLabel={(option) => option.name}
-              onChange={this.modelChanged}
-              renderInput={(params) => <TextField {...params} label="Kinetics models" variant="outlined" />}
-            />
-  
-            <TextArea schemeText={this.state.schemeText} modelSubmitCallback={this.modelSubmitted} textChangedCallback={this.textChangedCallback}/>
+        <Switch>
+        <Route path="/about">
+            {"about page"}
+            <BlockMath math={"a = b = c = d"} errorColor={'#cc0000'} />
+          </Route>
+          <Route path="/">
+            <Grid container spacing={1} alignItems="stretch" alignCoontent="center" direction="column">
+              <Grid item xs={false} sm={3} />
+              <Grid item xs={12} sm={6}>
 
-            <FormControlLabel
-                control={<Checkbox color="secondary" checked={this.state.cbNonZero} onChange={this.cbNonZero_checkedChanged} name="cbNonZero" />}
-                label="Non-zero backwards rates"
-            />
+                <Autocomplete
+                  options={kineticModels.sort((a, b) => -b.class.localeCompare(a.class))}
+                  groupBy={(option) => option.class}
+                  getOptionLabel={(option) => option.name}
+                  onChange={this.modelChanged}
+                  renderInput={(params) => <TextField {...params} label="Kinetics models" variant="outlined" />}
+                />
 
-            <BlockMath math={`${this.state.texModel} `} errorColor={'#cc0000'}/>  {/* without space it will through an error: KaTeX can only parse string typed expression */}
-            {/* <BlockMath math={`\\begin{aligned} ${this.state.texModel} \\end{aligned}`} errorColor={'#cc0000'}/> */}
-            <BlockMath math={`${this.state.texEquation} `} errorColor={'#cc0000'}/>  {/* without space it will through an error: KaTeX can only parse string typed expression */}
+                <TextArea schemeText={this.state.schemeText} modelSubmitCallback={this.modelSubmitted} textChangedCallback={this.textChangedCallback} />
+
+                <FormControlLabel
+                  control={<Checkbox color="secondary" checked={this.state.cbNonZero} onChange={this.cbNonZero_checkedChanged} name="cbNonZero" />}
+                  label="Non-zero backwards rates"
+                />
+
+                <BlockMath math={`${this.state.texModel} `} errorColor={'#cc0000'} />  {/* without space it will through an error: KaTeX can only parse string typed expression */}
+                {/* <BlockMath math={`\\begin{aligned} ${this.state.texModel} \\end{aligned}`} errorColor={'#cc0000'}/> */}
+                <BlockMath math={`${this.state.texEquation} `} errorColor={'#cc0000'} />  {/* without space it will through an error: KaTeX can only parse string typed expression */}
 
 
-            {/* <BlockMath math={`\\begin{aligned} ${this.state.texEquation} \\end{aligned}`} errorColor={'#cc0000'}/> */}
-  
-            <InitCondTable 
-              data={this.state.initData} 
-              sliderChangedCallback={this.sliderValueChanged}
-              sliderLogToggledCallback={this.sliderLogToggledCallback}>
-            </InitCondTable>
+                {/* <BlockMath math={`\\begin{aligned} ${this.state.texEquation} \\end{aligned}`} errorColor={'#cc0000'}/> */}
 
-            <RatesTable 
-              data={this.state.ratesData} 
-              sliderChangedCallback={this.sliderValueChanged}
-              sliderLogToggledCallback={this.sliderLogToggledCallback}
-              disabled={!this.state.cbNonZero}>
-            </RatesTable>
+                <InitCondTable
+                  data={this.state.initData}
+                  sliderChangedCallback={this.sliderValueChanged}
+                  sliderLogToggledCallback={this.sliderLogToggledCallback}>
+                </InitCondTable>
 
-            <ToggleButton
-                selected={(this.state.figure.layout.xaxis.type === 'linear') ? false : true}
-                onChange={() => {
-                  let figure = this.state.figure;
-                  figure.layout.xaxis.type = (figure.layout.xaxis.type === 'linear') ? 'log' : 'linear';
-                  figure.revision += 1;
-                  this.setState({figure: figure});
-                }}
-              >Log x</ToggleButton>
+                <RatesTable
+                  data={this.state.ratesData}
+                  sliderChangedCallback={this.sliderValueChanged}
+                  sliderLogToggledCallback={this.sliderLogToggledCallback}
+                  disabled={!this.state.cbNonZero}>
+                </RatesTable>
 
-            <ToggleButton
-                selected={(this.state.figure.layout.yaxis.type === 'linear') ? false : true}
-                onChange={() => {
-                  let figure = this.state.figure;
-                  figure.layout.yaxis.type = (figure.layout.yaxis.type === 'linear') ? 'log' : 'linear';
-                  figure.revision += 1;
-                  this.setState({figure: figure});
-                }}
-              >Log y</ToggleButton>
-  
-          </Grid>
-          <Grid item xs={6} sm={5}>
-            <PlotlyGraph 
-              data={this.state.figure.data}
-              frames={this.state.figure.frames}
-              config={this.state.figure.config}
-              layout={this.state.figure.layout}
-              revision={this.state.figure.revision}
-             />
-             
-          </Grid>
-          <Grid item xs={false} sm={1}/>
-        </Grid>
+                <ToggleButton
+                  selected={(this.state.figure.layout.xaxis.type === 'linear') ? false : true}
+                  onChange={() => {
+                    let figure = this.state.figure;
+                    figure.layout.xaxis.type = (figure.layout.xaxis.type === 'linear') ? 'log' : 'linear';
+                    figure.revision += 1;
+                    this.setState({ figure: figure });
+                  }}
+                >Log x</ToggleButton>
+
+                <ToggleButton
+                  selected={(this.state.figure.layout.yaxis.type === 'linear') ? false : true}
+                  onChange={() => {
+                    let figure = this.state.figure;
+                    figure.layout.yaxis.type = (figure.layout.yaxis.type === 'linear') ? 'log' : 'linear';
+                    figure.revision += 1;
+                    this.setState({ figure: figure });
+                  }}
+                >Log y</ToggleButton>
+
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <PlotlyGraph
+                  data={this.state.figure.data}
+                  frames={this.state.figure.frames}
+                  config={this.state.figure.config}
+                  layout={this.state.figure.layout}
+                  revision={this.state.figure.revision}
+                />
+
+              </Grid>
+              <Grid item xs={false} sm={3} />
+            </Grid>
+          </Route>
+          
+
+        </Switch>
+
       </div>
     );
   }

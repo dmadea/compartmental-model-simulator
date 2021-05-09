@@ -1,6 +1,6 @@
 import React from 'react'
 import { Icon } from "@material-ui/core";
-import logo from './bitcoin-white.svg';
+import logo from './img/bitcoin-white.svg';
 
 export default function BtcIcon() {
     return (
