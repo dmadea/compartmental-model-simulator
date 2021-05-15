@@ -1,37 +1,20 @@
 import { useState, React } from 'react';
 import Plot from 'react-plotly.js';
+import { useSelector } from 'react-redux';
 
 
-// var layout = {
-//     title: 'Title of the graph',
-//     xaxis: {
-//         title: 'Time',
-//         showgrid: true,
-//         zeroline: false,
-//         linecolor: 'black',
-//         linewidth: 1,
-//         mirror: true
-//     },
-//     yaxis: {
-//         title: 'Concentration',
-//         showgrid: true,
-//         zeroline: false,
-//         type: 'log',
-//         linecolor: 'red',
-//         linewidth: 1,
-//         mirror: true
-//     }
-// };
+export default function PlotlyGraph() {
 
-export default function PlotlyGraph( {data, layout, config, frames, revision }) {
+    const state = useSelector(state => state.mainPage.figure);
+
     return (
       <Plot
-        data={data}
-        layout={ layout }
-        config={config}
-        frames={frames}
+        data={state.data}
+        layout={ state.layout }
+        config={state.config}
+        frames={state.frames}
         // onUpdate={figure => console.log('on update')}
-        revision={revision}
+        revision={state.revision}
         useResizeHandler={true}
         style={{
           width: '100%',

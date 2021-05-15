@@ -2,6 +2,9 @@ import React from 'react';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { Button } from '@material-ui/core';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { schemeChanged } from '../redux/actions/mainPage';
+
 
 // export default class TextArea extends React.Component {
 
@@ -32,23 +35,26 @@ import { Button } from '@material-ui/core';
 // }
 
 
-export default function TextArea({schemeText, modelSubmitCallback, textChangedCallback}) {
-    // const [text, setValue] = React.useState(typeof props.schemeText === 'undefined' ? "" : props.schemeText);
-  
-    return (
-        <div>
-          <div className="text-area">
-            <TextareaAutosize 
-              onChange={event => textChangedCallback(event.target.value)} 
-              aria-label="empty textarea" 
-              placeholder=">> Place kinetic model here <<"
-              style={{fontSize: 18, fontFamily: 'Palatino'}}
-              value={schemeText}>
-            </TextareaAutosize>
-            </div>
-            <Button variant="contained" 
-                onClick={() => modelSubmitCallback()} 
-                color="primary">Submit</Button>
-        </div>
-    );
-  }
+export default function TextArea({ modelSubmitCallback }) {
+  // const [text, setValue] = React.useState(typeof props.schemeText === 'undefined' ? "" : props.schemeText);
+  const schemeText = useSelector(state => state.mainPage.schemeText);
+  const dispatch = useDispatch();
+
+
+  return (
+    <div>
+      <div className="text-area">
+        <TextareaAutosize
+          onChange={event => dispatch(schemeChanged(event.target.value))}
+          aria-label="empty textarea"
+          placeholder=">> Place kinetic model here <<"
+          style={{ fontSize: 18, fontFamily: 'Palatino' }}
+          value={schemeText}>
+        </TextareaAutosize>
+      </div>
+      <Button variant="contained"
+        onClick={() => modelSubmitCallback()}
+        color="primary">Submit</Button>
+    </div>
+  );
+}

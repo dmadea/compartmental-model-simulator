@@ -1,5 +1,5 @@
 
-import { rungeKutta4 } from './rk.js';
+// import { rungeKutta4 } from './rk.js';
 var rk45 = require( "./rk45.js" );
 
 // Warn if overriding existing method

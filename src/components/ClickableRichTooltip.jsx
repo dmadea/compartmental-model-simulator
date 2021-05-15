@@ -1,7 +1,7 @@
 // Stolen from https://codesandbox.io/s/popper-with-arrow-58jhe?file=/src/App.tsx:496-536
 // import { PopperPlacementType } from "@material-ui/core";
 import React, { useState } from "react";
-import RichTooltip from "./RichTooltip.js";
+import RichTooltip from "./RichTooltip";
 
 const ClickableRichTooltip = ({
   placement,

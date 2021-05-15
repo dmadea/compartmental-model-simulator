@@ -9,18 +9,18 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { IconButton, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import BtcIcon from './btcLogo.js';
-import RichTooltip from './RichTooltip.js';
-import ClickableRichTooltip from './ClickableRichTooltip.js';
+import BtcIcon from './btcLogo';
+import RichTooltip from './RichTooltip';
+import ClickableRichTooltip from './ClickableRichTooltip';
 
 import Input from '@material-ui/core/Input';
 import { QRCode } from 'react-qrcode-logo';
-import btcImage from './img/btc-orange.png';
-import ethImage from './img/eth.png';
-import ltcImage from './img/litecoin-seeklogo.com.png';
+import btcImage from '../img/btc-orange.png';
+import ethImage from '../img/eth.png';
+import ltcImage from '../img/litecoin-seeklogo.com.png';
 import Grid from '@material-ui/core/Grid';
 import { Icon } from "@material-ui/core";
-import CopyTextBox from "./copyField.js";
+import CopyTextBox from "./copyField";
 import { useTheme } from '@material-ui/core/styles';
 
 // import Card from '@material-ui/core/Card';

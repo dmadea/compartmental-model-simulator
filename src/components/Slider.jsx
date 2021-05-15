@@ -6,6 +6,9 @@ import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 // import VolumeUp from '@material-ui/icons/VolumeUp';
+import { sliderValueChanged, sliderVarsChanged } from '../redux/actions/mainPage';
+
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles({
   root: {
@@ -37,16 +40,16 @@ const MySlider = withStyles({
 })(Slider);
 
 function round(value, digits) {
-  return Math.round((value + Number.EPSILON) * 10**digits) / 10**digits
+  return Math.round((value + Number.EPSILON) * 10 ** digits) / 10 ** digits
 }
 
 // https://stackoverflow.com/questions/202302/rounding-to-an-arbitrary-number-of-significant-digits
 function roundToSignificantFigures(num, n) {
-  if(num == 0) {
-      return 0;
+  if (num == 0) {
+    return 0;
   }
 
-  let d = Math.ceil(Math.log10(num < 0 ? -num: num));
+  let d = Math.ceil(Math.log10(num < 0 ? -num : num));
   let power = n - Math.floor(d);
 
   let magnitude = 10 ** power;
@@ -85,9 +88,12 @@ function roundToSignificantFigures(num, n) {
 //   // },
 // })(Slider);
 
-export default function InputSlider({ steps, min, max, color, log, type, index, value, 
-  sliderChangedCallback, sliderLogToggledCallback, disabled }) {
+export default function InputSlider({ value, log, min, max, steps, color, typeHandeValue, typeHandleVars, index, disabled }) {
   const classes = useStyles();
+
+  // const { texName, value, log, min, max } = useSelector(state => selector(state)[index]);  // selector = (state) => state.mainPage.initConds
+  const dispatch = useDispatch();
+
   // const [value, setValue] = React.useState(typeof defaultValue === 'undefined' ? 0 : defaultValue);
 
   // const [toggled, setToggled] = React.useState(false);
@@ -97,8 +103,10 @@ export default function InputSlider({ steps, min, max, color, log, type, index, 
   const handleSliderChange = (event, newValue) => {
     if (value !== newValue) {
       // setValue(newValue);
-      let new_val = (log === true) ? Math.exp(newValue) : newValue;
-      sliderChangedCallback(type, index, roundToSignificantFigures(new_val, sigDigits));
+      let val = (log === true) ? Math.exp(newValue) : newValue;
+      // sliderChangedCallback(type, index, roundToSignificantFigures(new_val, sigDigits));
+      dispatch(sliderValueChanged(typeHandeValue, index, roundToSignificantFigures(val, sigDigits)))
+
     }
   };
 
@@ -106,7 +114,9 @@ export default function InputSlider({ steps, min, max, color, log, type, index, 
     let newValue = event.target.value === '' ? 0 : Number(event.target.value);
 
     if (value !== newValue) {
-      sliderChangedCallback(type, index, roundToSignificantFigures(newValue, sigDigits));
+      // sliderChangedCallback(type, index, roundToSignificantFigures(newValue, sigDigits));
+      dispatch(sliderValueChanged(typeHandeValue, index, roundToSignificantFigures(newValue, sigDigits)))
+
       // setValue(newValue);
     }
   };
@@ -130,7 +140,7 @@ export default function InputSlider({ steps, min, max, color, log, type, index, 
   // calculates the linear step for input field
   let inputStep = log ? Math.exp(Math.log(value) + logStep) - value : linStep;
   inputStep = roundToSignificantFigures(inputStep, 3)
-  
+
   // console.log(inputStep);
 
   //   function valueLabelFormat(value) {
@@ -149,7 +159,8 @@ export default function InputSlider({ steps, min, max, color, log, type, index, 
             // value='check'
             selected={log}
             disabled={disabled}
-            onChange={() => sliderLogToggledCallback(type, index)}
+            onChange={() => dispatch(sliderVarsChanged(typeHandleVars, index, min, max, !log))}
+
           >Log</ToggleButton>
         </Grid>
         <Grid item xs>
@@ -174,9 +185,9 @@ export default function InputSlider({ steps, min, max, color, log, type, index, 
             onChange={handleInputChange}
             // onBlur={handleBlur}
             inputProps={{
-                min:  min,
-                max:  max,
-                step: inputStep,
+              min: min,
+              max: max,
+              step: inputStep,
               type: 'number',
               'aria-labelledby': 'input-slider',
             }}
