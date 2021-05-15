@@ -36,9 +36,9 @@ export default function MainPage() {
     submitModel();
   }, []);
 
-  function submitModel(selecteModel = null, schemeText = null) {
+  function submitModel(selectedModel = null, schemeText = null) {
 
-    let text = selecteModel === null ? state.schemeText : schemeText;
+    let text = selectedModel === null ? state.schemeText : schemeText;
 
     if (text === "" || text.match(/[^\s]+/g) === null) {
       alert('Scheme is empty!');
@@ -59,15 +59,15 @@ export default function MainPage() {
       let init_value = (i < lastInitConds.length) ? lastInitConds[i].value : model.initial_conditions[comps[i]];
       let log = (i < lastInitConds.length) ? lastInitConds[i].log : false;
 
-      let condition = selecteModel === null;
+      let condition = selectedModel === null;
 
       initConds[i] = { ...sliderDataTemplate };
 
       initConds[i].texName = compsF[i];
-      initConds[i].value = condition ? init_value : selecteModel.initialConditions[comps[i]].value;
-      initConds[i].log = condition ? log : selecteModel.initialConditions[comps[i]].logSlider;
-      initConds[i].min = condition ? 0 : selecteModel.initialConditions[comps[i]].min;
-      initConds[i].max = condition ? 50 : selecteModel.initialConditions[comps[i]].max;
+      initConds[i].value = condition ? init_value : selectedModel.initialConditions[comps[i]].value;
+      initConds[i].log = condition ? log : selectedModel.initialConditions[comps[i]].logSlider;
+      initConds[i].min = condition ? 0 : selectedModel.initialConditions[comps[i]].min;
+      initConds[i].max = condition ? 50 : selectedModel.initialConditions[comps[i]].max;
 
       // transfer params to model
       model.initial_conditions[comps[i]] = initConds[i].value;
@@ -87,22 +87,22 @@ export default function MainPage() {
       let log_fr = (i < lastForwardRates.length) ? lastForwardRates[i].log : false;
       let log_br = (i < lastBackwardRates.length) ? lastBackwardRates[i].log : false;
 
-      let condition = selecteModel === null || typeof selecteModel.rates === 'undefined';
+      let condition = selectedModel === null || typeof selectedModel.rates === 'undefined';
 
       forwardRates[i] = { ...sliderDataTemplate };
       backwardRates[i] = { ...sliderDataTemplate };
 
       forwardRates[i].texName = rateNames[i];
-      forwardRates[i].value = condition ? fr_val : selecteModel.rates[i].forwardRate;
-      forwardRates[i].log = condition ? log_fr : selecteModel.rates[i].forwardRateLogSlider;
-      forwardRates[i].min = condition ? 0 : selecteModel.rates[i].forwardRateMin;
-      forwardRates[i].max = condition ? 10 : selecteModel.rates[i].forwardRateMax;
+      forwardRates[i].value = condition ? fr_val : selectedModel.rates[i].forwardRate;
+      forwardRates[i].log = condition ? log_fr : selectedModel.rates[i].forwardRateLogSlider;
+      forwardRates[i].min = condition ? 0 : selectedModel.rates[i].forwardRateMin;
+      forwardRates[i].max = condition ? 10 : selectedModel.rates[i].forwardRateMax;
 
       backwardRates[i].texName = rateNames[i];
-      backwardRates[i].value = condition ? br_val : selecteModel.rates[i].backwardRate;
-      backwardRates[i].log = condition ? log_br : selecteModel.rates[i].backwardRateLogSlider;
-      backwardRates[i].min = condition ? 0 : selecteModel.rates[i].backwardRateMin;
-      backwardRates[i].max = condition ? 10 : selecteModel.rates[i].backwardRateMax;
+      backwardRates[i].value = condition ? br_val : selectedModel.rates[i].backwardRate;
+      backwardRates[i].log = condition ? log_br : selectedModel.rates[i].backwardRateLogSlider;
+      backwardRates[i].min = condition ? 0 : selectedModel.rates[i].backwardRateMin;
+      backwardRates[i].max = condition ? 10 : selectedModel.rates[i].backwardRateMax;
 
       // transfer params to model
       model.elem_reactions[i].forward_rate = forwardRates[i].value;
