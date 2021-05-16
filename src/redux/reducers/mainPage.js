@@ -18,7 +18,7 @@ const plotDataTemplate = {
 };
 
 const initState = {
-    initConds: [],  // initial conditons, consists of sliderDataTemplate template objects
+    initConds: [],  // initial conditons, consists of sliderDataTemplate objects
     forwardRates: [],  // forward rates
     backwardRates: [],  // backward rates
     schemeText: "A = B = C = D = E",  // text in scheme
@@ -29,6 +29,7 @@ const initState = {
     range: [0, 20],
     algorithm: 'rk45',
     steps: 200,
+    timeUnit: 's',
 
     figure: {
         data: [
@@ -69,11 +70,19 @@ function simulateModel(state) {
     let comps = state.model.getCompartments();
     let solution = state.model.simulateModel(state.steps, state.range, !state.cbNonZero);
 
-    // update figure data
-    const data = new Array(comps.length);
+    let data = state.figure.data;
+
+    // update figure data, reuse the original data , otherwise the plot will be drawing a new data every time
+    let diff = comps.length - data.length;  // difference in number of current compartments and from new model
+    if (diff > 0) {
+        for (let i = 0; i < diff; i++)
+            data.push({ ...plotDataTemplate });
+    } else if (diff < 0) {
+        for (let i = 0; i < -diff; i++)
+            data.pop();
+    }
 
     for (let i = 0; i < comps.length; i++) {
-        data[i] = { ...plotDataTemplate }
         data[i].x = solution.xVals;
         data[i].y = solution.yVals[i];
         data[i].name = `${comps[i]}`;
@@ -145,12 +154,12 @@ export default function mainPage(state = initState, action) {
 
             return newState;
 
-        case type.SET_LOG_X:
+        case type.TOGGLE_LOG_X:
             newState.figure.layout.xaxis.type = (state.figure.layout.xaxis.type === 'linear') ? 'log' : 'linear';
             newState.figure.revision += 1;
             return newState;
 
-        case type.SET_LOG_Y:
+        case type.TOGGLE_LOG_Y:
             newState.figure.layout.yaxis.type = (state.figure.layout.yaxis.type === 'linear') ? 'log' : 'linear';
             newState.figure.revision += 1;
             return newState;

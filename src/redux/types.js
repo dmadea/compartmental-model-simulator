@@ -13,7 +13,7 @@ export const SET_SCHEME_TEXT = 'SET_SCHEME_TEXT';
 
 export const SET_GENERAL_MODEL = 'SET_GENERAL_MODEL';
 
-export const SET_LOG_X = 'SET_LOG_X';
-export const SET_LOG_Y = 'SET_LOG_Y';
+export const TOGGLE_LOG_X = 'TOGGLE_LOG_X';
+export const TOGGLE_LOG_Y = 'TOGGLE_LOG_Y';
 
 export const SET_SCHEME_AND_CB_NON_ZERO = 'SET_SCHEME_AND_CB_NON_ZERO';

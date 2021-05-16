@@ -1,27 +1,30 @@
 import React from 'react';
 import '../App.css';
-import Header from './header';
-import { Switch, Route } from "react-router-dom";
+import Header from './header/header';
+import { Switch, Route, useHistory } from "react-router-dom";
+// import { createBrowserHistory } from "history";
 
-import { BlockMath } from 'react-katex';
-import 'katex/dist/katex.min.css';
+
 import MainPage from './mainPage';
+import AboutPage from './AboutPage';
+
+// const history = createBrowserHistory();
 
 
 function App() {
+
+  const history = useHistory();
+  // console.log(history);
 
   return (
     <div className="App">
       <Header />
 
       <Switch>
-        <Route path="/about">
-          {"about page"}
-          <BlockMath math={"a = b = c = d"} errorColor={'#cc0000'} />
-        </Route>
-        <Route path="/">
-          <MainPage />
-        </Route>
+        <Route exact path="/" component={MainPage}/>
+        <Route exact path="/about" component={AboutPage}/>
+        <Route exact path="/:state" render={(props) => <MainPage {...props} />} />
+
       </Switch>
     </div>
   );

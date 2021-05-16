@@ -1,6 +1,8 @@
 import React, { useState, TextField } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { useTheme } from '@material-ui/core/styles';
+import { BlockMath } from 'react-katex';
+import 'katex/dist/katex.min.css';
 
 const useStyles = makeStyles({
     root: {
@@ -47,14 +49,15 @@ const useStyles = makeStyles({
 
 });
 
-export default function About() {
+export default function AboutPage() {
     const classes = useStyles();
-    
+
     const theme = useTheme();
 
     return (
         <div className={classes.root}>
-
+            {"about page"}
+            <BlockMath math={"a = b = c = d"} errorColor={'#cc0000'} />
         </div>
     )
 }

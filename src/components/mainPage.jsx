@@ -22,14 +22,19 @@ import 'katex/dist/katex.min.css';
 // import { Button, TextareaAutosize } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { cbNonZeroCheckedChanged, setSchemeText, setGeneralModel, setLogX, setLogY, setSchemeAndcbNonZero } from '../redux/actions/mainPage';
+import { cbNonZeroCheckedChanged, setSchemeText, setGeneralModel, toggleLogX, toggleLogY, setSchemeAndcbNonZero } from '../redux/actions/mainPage';
 import { sliderDataTemplate } from '../redux/reducers/mainPage';
+import { decodeJson } from '../compress';
 
 
-export default function MainPage() {
+export default function MainPage(props) {
 
   const state = useSelector(state => state.mainPage);
   const dispatch = useDispatch();
+
+  const stateBase64 = props.match.params.state;
+  const decodedState = decodeJson(stateBase64);
+  console.log(decodedState);
 
   // component did mount
   useEffect(() => {
@@ -170,12 +175,12 @@ export default function MainPage() {
 
           <ToggleButton
             selected={(state.figure.layout.xaxis.type === 'linear') ? false : true}
-            onChange={() => dispatch(setLogX())}
+            onChange={() => dispatch(toggleLogX())}
           >Log x</ToggleButton>
 
           <ToggleButton
             selected={(state.figure.layout.yaxis.type === 'linear') ? false : true}
-            onChange={() => dispatch(setLogY())}
+            onChange={() => dispatch(toggleLogY())}
           >Log y</ToggleButton>
 
         </Grid>

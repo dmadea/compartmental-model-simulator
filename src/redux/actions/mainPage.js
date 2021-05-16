@@ -51,14 +51,14 @@ export const setGeneralModel = (model, initConds, forwardRates, backwardRates) =
     }
 }
 
-export const setLogX = () => {
+export const toggleLogX = () => {
     return {
-        type: type.SET_LOG_X,
+        type: type.TOGGLE_LOG_X,
     }
 }
 
-export const setLogY = () => {
+export const toggleLogY = () => {
     return {
-        type: type.SET_LOG_Y,
+        type: type.TOGGLE_LOG_Y,
     }
 }
